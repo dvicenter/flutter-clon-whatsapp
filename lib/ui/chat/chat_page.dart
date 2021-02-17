@@ -1,4 +1,5 @@
 import 'package:clon_whatsapp/models/chat_model.dart';
+import 'package:clon_whatsapp/ui/chat/room/chat_room.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
@@ -7,11 +8,22 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  void handlerTabChat(ChatModel chat) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ChatRoom(
+          name: chat.name,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: messageData.length,
       itemBuilder: (context, index) {
+        final chat = messageData[index];
         return Column(
           children: [
             Divider(
@@ -20,18 +32,18 @@ class _ChatPageState extends State<ChatPage> {
             ListTile(
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  messageData[index].imageUrl,
+                  chat.imageUrl,
                 ),
               ),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    messageData[index].name,
+                    chat.name,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    messageData[index].time,
+                    chat.time,
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14.0,
@@ -42,10 +54,11 @@ class _ChatPageState extends State<ChatPage> {
               subtitle: Container(
                 padding: const EdgeInsets.only(top: 5.0),
                 child: Text(
-                  messageData[index].message,
+                  chat.message,
                   style: TextStyle(color: Colors.grey, fontSize: 15.0),
                 ),
               ),
+              onTap: () => handlerTabChat(chat),
             ),
           ],
         );
