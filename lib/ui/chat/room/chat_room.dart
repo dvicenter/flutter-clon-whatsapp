@@ -1,3 +1,4 @@
+import 'package:clon_whatsapp/models/chat_model.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -10,8 +11,13 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
+  bool _isTyped = false;
 
   void _handledSubmid(String text) {
+    _textController.clear();
+    setState(() {
+      _isTyped = false;
+    });
     ChatMessage message = ChatMessage(
       text: text,
       animationController: AnimationController(
@@ -23,6 +29,9 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
 
     setState(() {
       _messages.insert(0, message);
+      var data =
+          messageData.firstWhere((element) => element.name == widget.name);
+      data.message = message.text;
     });
 
     message.animationController.forward();
@@ -40,12 +49,21 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
             Flexible(
               child: TextField(
                 controller: _textController,
+                onChanged: (text) {
+                  setState(() {
+                    _isTyped = text.length > 0;
+                  });
+                },
+                decoration:
+                    InputDecoration.collapsed(hintText: 'Enviar mensaje'),
               ),
             ),
             Container(
               child: IconButton(
                 icon: Icon(Icons.send),
-                onPressed: () => _handledSubmid(_textController.text),
+                onPressed: _isTyped
+                    ? () => _handledSubmid(_textController.text)
+                    : null,
               ),
             )
           ],
@@ -65,6 +83,8 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
           children: [
             Flexible(
               child: ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                reverse: true,
                 itemCount: _messages.length,
                 itemBuilder: (_, index) => _messages[index],
               ),
@@ -97,18 +117,26 @@ class ChatMessage extends StatelessWidget {
         curve: Curves.easeOut,
       ),
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              margin: const EdgeInsets.only(right: 16.0),
               child: CircleAvatar(
                 child: Text(name[0]),
               ),
             ),
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name),
+                  Text(
+                    name,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
                   Container(
+                    margin: const EdgeInsets.only(top: 5.0),
                     child: Text(text),
                   ),
                 ],
