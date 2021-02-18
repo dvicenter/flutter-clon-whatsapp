@@ -21,7 +21,7 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
     ChatMessage message = ChatMessage(
       text: text,
       animationController: AnimationController(
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 300),
         vsync: this,
       ),
       name: widget.name,

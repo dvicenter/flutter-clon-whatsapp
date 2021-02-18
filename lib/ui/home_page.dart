@@ -1,5 +1,6 @@
 import 'package:clon_whatsapp/ui/call/call_page.dart';
 import 'package:clon_whatsapp/ui/chat/chat_page.dart';
+import 'package:clon_whatsapp/ui/contact/contact_page.dart';
 import 'package:clon_whatsapp/ui/status/status_page.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+
+  Future<void> handlerOnPressContact() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ContactPage(),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -53,6 +62,14 @@ class _HomePageState extends State<HomePage>
           StatusPage(),
           CallPage(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).accentColor,
+        child: Icon(
+          Icons.message,
+          color: Colors.white,
+        ),
+        onPressed: () => handlerOnPressContact(),
       ),
     );
   }
